@@ -1,0 +1,421 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz Results - {{ quiz.title }}{% endblock %}
+
+{% block content %}
+<div class="result-container">
+    <h1>Quiz Results: {{ quiz.title }}</h1>
+    
+    <div class="score-card">
+        <div class="final-score">
+            <h2>Final Score</h2>
+            <div class="score {% if attempt.score >= 70 %}passing{% else %}failing{% endif %}">
+                {{ "%.1f"|format(attempt.score) }}%
+            </div>
+        </div>
+        
+        <div class="statistics">
+            <div class="stat-item">
+                <span class="stat-label">Total Questions</span>
+                <span class="stat-value">{{ quiz.questions|length }}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Attempted</span>
+                <span class="stat-value">{{ attempt.answers|length }}</span>
+            </div>
+            <div class="stat-item warning">
+                <span class="stat-label">Skipped</span>
+                <span class="stat-value">{{ quiz.questions|length - attempt.answers|length }}</span>
+            </div>
+            <div class="stat-item success">
+                <span class="stat-label">Correct</span>
+                <span class="stat-value">{{ attempt.correct_questions|length }}</span>
+            </div>
+            <div class="stat-item danger">
+                <span class="stat-label">Incorrect</span>
+                <span class="stat-value">{{ attempt.answers|length - attempt.correct_questions|length }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="question-review">
+        <h2>Question Review</h2>
+        {% for question in quiz.questions %}
+            <div class="question-card {% if question.id in attempt.correct_questions %}correct{% elif question.id|string in attempt.answers %}incorrect{% else %}skipped{% endif %}">
+                <div class="question-header">
+                    <span class="question-number">Question {{ loop.index }}</span>
+                    <span class="question-status">
+                        {% if question.id in attempt.correct_questions %}
+                            ✓ Correct
+                        {% elif question.id|string in attempt.answers %}
+                            ✗ Incorrect
+                        {% else %}
+                            ○ Skipped
+                        {% endif %}
+                    </span>
+                </div>
+                
+                <p class="question-text">{{ question.text }}</p>
+                
+                <div class="options">
+                    {% for option in question.options %}
+                        <div class="option 
+                            {% if loop.index0 in question.correct_answers %}correct-answer{% endif %}
+                            {% if question.id|string in attempt.answers and loop.index0 in attempt.answers[question.id|string] %}selected{% endif %}">
+                            {{ option }}
+                            {% if loop.index0 in question.correct_answers %}
+                                <span class="correct-mark">✓</span>
+                            {% endif %}
+                            {% if question.id|string in attempt.answers and loop.index0 in attempt.answers[question.id|string] and loop.index0 not in question.correct_answers %}
+                                <span class="incorrect-mark">✗</span>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                {% if question.option_explanations %}
+                    <div class="explanation-section">
+                        <button class="btn btn-info btn-sm show-explanation" 
+                                onclick="toggleExplanation('explanation-{{ question.id }}')">
+                            <span class="button-text">Show Explanation</span>
+                            <span class="icon">▼</span>
+                        </button>
+                        <div id="explanation-{{ question.id }}" class="explanation-content" style="display: none;">
+                            {% for correct_index in question.correct_answers %}
+                                {% if question.option_explanations[correct_index] %}
+                                    <div class="explanation general-explanation">
+                                        <strong>Explanation:</strong>
+                                        <p>{{ question.option_explanations[correct_index] }}</p>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            <div class="option-explanations">
+                                <strong>Further Details:</strong>
+                                {% for option in question.options %}
+                                    {% if loop.index0 not in question.correct_answers %}
+                                        <div class="option-explanation">
+                                            <div class="option-text">
+                                                <span class="option-marker">{{ loop.index + 1 }}.</span>
+                                                {{ option }}
+                                            </div>
+                                            {% if question.option_explanations[loop.index0] %}
+                                                <p>{{ question.option_explanations[loop.index0] }}</p>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+    
+    <div class="actions">
+        <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+        <a href="{{ url_for('main.start_quiz', quiz_title=quiz.title) }}" class="btn btn-primary">Retake Quiz</a>
+    </div>
+</div>
+
+<style>
+.result-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.score-card {
+    background: white;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.final-score {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.score {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.score.passing {
+    color: #28a745;
+}
+
+.score.failing {
+    color: #dc3545;
+}
+
+.statistics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+    transition: transform 0.2s;
+}
+
+.stat-item:hover {
+    transform: translateY(-2px);
+}
+
+.stat-item.success {
+    background-color: rgba(40, 167, 69, 0.1);
+}
+
+.stat-item.danger {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+.stat-item.warning {
+    background-color: rgba(255, 193, 7, 0.1);
+}
+
+.stat-label {
+    display: block;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.success .stat-value {
+    color: #28a745;
+}
+
+.danger .stat-value {
+    color: #dc3545;
+}
+
+.warning .stat-value {
+    color: #ffc107;
+}
+
+.question-review {
+    margin-top: 2rem;
+}
+
+.question-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-left: 4px solid #6c757d;
+}
+
+.question-card.correct {
+    border-left-color: #28a745;
+}
+
+.question-card.incorrect {
+    border-left-color: #dc3545;
+}
+
+.question-card.skipped {
+    border-left-color: #ffc107;
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.question-status {
+    font-weight: bold;
+}
+
+.correct .question-status {
+    color: #28a745;
+}
+
+.incorrect .question-status {
+    color: #dc3545;
+}
+
+.skipped .question-status {
+    color: #ffc107;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.option {
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.option.correct-answer {
+    background-color: rgba(40, 167, 69, 0.1);
+    border-color: #28a745;
+}
+
+.option.selected {
+    background-color: rgba(220, 53, 69, 0.1);
+    border-color: #dc3545;
+}
+
+.option.selected.correct-answer {
+    background-color: rgba(40, 167, 69, 0.1);
+    border-color: #28a745;
+}
+
+.correct-mark {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.incorrect-mark {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.explanation-section {
+    margin-top: 1rem;
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    color: white;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-sm {
+    font-size: 0.875rem;
+}
+
+.show-explanation .icon {
+    transition: transform 0.3s ease;
+}
+
+.show-explanation.active .icon {
+    transform: rotate(180deg);
+}
+
+.explanation-content {
+    margin-top: 1rem;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.general-explanation {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-left: 4px solid #17a2b8;
+    margin-bottom: 1rem;
+}
+
+.option-explanations {
+    background-color: #fff;
+    padding: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+.option-explanation {
+    margin: 1rem 0;
+    padding: 0.5rem;
+    border-left: 3px solid #dee2e6;
+}
+
+.option-explanation.correct {
+    border-left-color: #28a745;
+}
+
+.option-text {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.option-marker {
+    color: #666;
+    margin-right: 0.5rem;
+}
+
+.option-explanation p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn {
+    padding: 0.5rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: transform 0.2s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+</style>
+
+{% block extra_js %}
+<script>
+function toggleExplanation(explanationId) {
+    const content = document.getElementById(explanationId);
+    const button = content.previousElementSibling;
+    const buttonText = button.querySelector('.button-text');
+    const icon = button.querySelector('.icon');
+    
+    if (content.style.display === 'none') {
+        content.style.display = 'block';
+        buttonText.textContent = 'Hide Explanation';
+        button.classList.add('active');
+    } else {
+        content.style.display = 'none';
+        buttonText.textContent = 'Show Explanation';
+        button.classList.remove('active');
+    }
+}
+</script>
+{% endblock %}
+{% endblock %}

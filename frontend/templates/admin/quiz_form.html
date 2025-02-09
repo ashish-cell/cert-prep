@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if quiz %}Edit Quiz{% else %}New Quiz{% endif %} - Admin Dashboard
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Upload Quiz</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {{ form.csrf_token }}
+                        
+                        <div class="mb-3">
+                            <label for="quiz_file" class="form-label">Select Quiz JSON File</label>
+                            <input type="file" class="form-control" id="quiz_file" name="quiz_file" accept=".json" required>
+                            <div class="form-text">Upload a JSON file containing quiz questions.</div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <h5>JSON Format Requirements:</h5>
+                            <pre>
+[
+    {
+        "question_text": "Question here?",
+        "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+        "correct_answers": [0], // Index of correct option(s)
+        "explanations": {
+            "0": "Explanation for option 1",
+            "1": "Explanation for option 2",
+            "2": "Explanation for option 3",
+            "3": "Explanation for option 4"
+        },
+        "domain": "Topic/Category"
+    },
+    // ... more questions ...
+]</pre>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Upload Quiz</button>
+                            <a href="{{ url_for('admin.quizzes') }}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            {% for message in messages %}
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <strong class="me-auto">Notification</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        {{ message }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize all toasts
+    var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+    var toastList = toastElList.map(function(toastEl) {
+        return new bootstrap.Toast(toastEl);
+    });
+    // Show all toasts
+    toastList.forEach(toast => toast.show());
+});
+</script>
+{% endblock %}

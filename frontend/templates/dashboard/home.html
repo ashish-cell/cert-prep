@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Quiz App{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    {% if not current_user.approved %}
+        <div class="alert alert-warning">
+            <h4><i class="fas fa-clock"></i> Account Pending Approval</h4>
+            <p>Your account is currently pending administrator approval. You'll be notified when your account is approved.</p>
+        </div>
+    {% else %}
+        {% if current_user.role == 'admin' %}
+            <div class="admin-welcome">
+                <h1>Welcome, Administrator!</h1>
+                <p>Use the admin dashboard to manage quizzes and users.</p>
+                <a href="{{ url_for('admin.index') }}" class="btn btn-primary">Go to Admin Dashboard</a>
+            </div>
+        {% else %}
+            <div class="student-dashboard">
+                <div class="stats-overview">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <i class="fas fa-check-circle"></i>
+                            <h3>Completed Quizzes</h3>
+                        </div>
+                        <div class="stat-value">{{ completed_count }}</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <i class="fas fa-star"></i>
+                            <h3>Average Score</h3>
+                        </div>
+                        <div class="stat-value">{{ average_score }}%</div>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h2>Recent Activity</h2>
+                    {% if recent_attempts %}
+                        <div class="activity-list">
+                            {% for attempt in recent_attempts %}
+                                <div class="activity-item">
+                                    <div class="quiz-info">
+                                        <h4>{{ attempt.quiz.title }}</h4>
+                                        <span class="score">Score: {{ "%.1f"|format(attempt.score) if attempt.score else 'N/A' }}%</span>
+                                    </div>
+                                    <div class="attempt-date">
+                                        {{ attempt.completed_at.strftime('%Y-%m-%d %H:%M') if attempt.completed_at else 'In Progress' }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="no-activity">No quiz attempts yet. Start a quiz to see your progress!</p>
+                    {% endif %}
+                </div>
+
+                <div class="actions">
+                    <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">View Available Quizzes</a>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+<style>
+.home-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.alert {
+    background: #fff3cd;
+    border: 1px solid #ffeeba;
+    color: #856404;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.alert h4 {
+    margin: 0 0 0.5rem 0;
+}
+
+.alert p {
+    margin: 0;
+}
+
+.stats-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.stat-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.stat-header i {
+    color: #007bff;
+    font-size: 1.5rem;
+}
+
+.stat-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #666;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.recent-activity {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.activity-list {
+    margin-top: 1rem;
+}
+
+.activity-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.quiz-info h4 {
+    margin: 0;
+    color: #333;
+}
+
+.score {
+    color: #28a745;
+    font-weight: 500;
+}
+
+.attempt-date {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.actions {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.admin-welcome {
+    text-align: center;
+    padding: 3rem;
+}
+
+.no-activity {
+    text-align: center;
+    color: #666;
+    padding: 2rem;
+}
+</style>
+{% endblock %}

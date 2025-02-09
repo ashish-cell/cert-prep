@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Quiz{% endblock %}
+
+{% block content %}
+<div class="upload-container">
+    <h1>Upload New Quiz</h1>
+    
+    <div class="upload-form-container">
+        <form action="{{ url_for('main.upload_quiz') }}" method="post" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+            
+            <div class="form-group">
+                <label for="quiz_file">Select Quiz File (JSON)</label>
+                <input type="file" id="quiz_file" name="quiz_file" accept=".json" required>
+                <small class="form-text text-muted">Please upload a JSON file containing quiz questions.</small>
+            </div>
+
+            <div class="preview-section" style="display: none;">
+                <h3>Quiz Preview</h3>
+                <div id="quiz-preview"></div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="previewQuiz()">Preview</button>
+                <button type="submit" class="btn btn-primary">Upload Quiz</button>
+                <a href="{{ url_for('admin.quizzes') }}" class="btn btn-link">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="format-guide">
+        <h3>JSON Format Guide</h3>
+        <pre><code>{
+    "questions": [
+        {
+            "question_text": "Your question here?",
+            "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+            "correct_answers": [0],
+            "explanations": {
+                "0": "Explanation for option 1",
+                "1": "Explanation for option 2",
+                "2": "Explanation for option 3",
+                "3": "Explanation for option 4"
+            },
+            "domain": "Category/Domain"
+        }
+    ]
+}</code></pre>
+    </div>
+</div>
+
+<style>
+.upload-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.upload-form-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-group input[type="file"] {
+    display: block;
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+.form-text {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+}
+
+.preview-section {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.format-guide {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.format-guide pre {
+    background: white;
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+.format-guide code {
+    font-family: monospace;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-link {
+    color: #007bff;
+    background: none;
+}
+</style>
+
+<script>
+function previewQuiz() {
+    const fileInput = document.getElementById('quiz_file');
+    const previewSection = document.querySelector('.preview-section');
+    const previewContent = document.getElementById('quiz-preview');
+    
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            try {
+                const quiz = JSON.parse(e.target.result);
+                let preview = `<p><strong>Total Questions:</strong> ${quiz.length}</p>`;
+                preview += '<h4>Sample Questions:</h4><ul>';
+                quiz.slice(0, 3).forEach((q, i) => {
+                    preview += `<li><strong>Q${i+1}:</strong> ${q.question_text}</li>`;
+                });
+                if (quiz.length > 3) {
+                    preview += '<li>...</li>';
+                }
+                preview += '</ul>';
+                previewContent.innerHTML = preview;
+                previewSection.style.display = 'block';
+            } catch (error) {
+                previewContent.innerHTML = '<p class="error">Error parsing quiz file. Please check the format.</p>';
+                previewSection.style.display = 'block';
+            }
+        };
+        
+        reader.readAsText(file);
+    }
+}
+</script>
+{% endblock %} 

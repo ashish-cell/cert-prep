@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}Available Quizzes{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Welcome, {{ current_user.username }}!</h1>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="flash-message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% if not current_user.approved %}
+        <div class="pending-approval">
+            <h2>Account Pending Approval</h2>
+            <p>Your account is currently pending approval. Please check back later.</p>
+        </div>
+    {% else %}
+        <div class="quizzes-section">
+            <h2>Available Quizzes</h2>
+            {% if new_quizzes %}
+                <div class="quiz-grid">
+                    {% for quiz in new_quizzes %}
+                        <div class="quiz-card">
+                            <div class="quiz-title">{{ quiz.title }}</div>
+                            <div class="quiz-meta">
+                                <span>{{ quiz.duration_minutes }}m</span>
+                                <span>•</span>
+                                <span>{{ quiz.questions|length }} Q</span>
+                            </div>
+                            <a href="{{ url_for('main.start_quiz', quiz_title=quiz.title) }}" 
+                               class="btn btn-primary">Start Quiz</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="no-quizzes">No new quizzes available.</p>
+            {% endif %}
+
+            {% if completed_quizzes %}
+                <h2>Completed Quizzes</h2>
+                <div class="quiz-grid">
+                    {% for quiz in completed_quizzes %}
+                        <div class="quiz-card completed">
+                            <div class="quiz-title">{{ quiz.title }}</div>
+                            <div class="quiz-meta">
+                                <span>{{ quiz.duration_minutes }}m</span>
+                                <span>•</span>
+                                <span>{{ quiz.questions|length }} Q</span>
+                                {% set attempt = quiz.attempts|selectattr('user_id', 'equalto', current_user.id)|first %}
+                                {% if attempt %}
+                                    <span>•</span>
+                                    <span class="score">{{ attempt.score|round|int }}%</span>
+                                {% endif %}
+                            </div>
+                            <div class="quiz-actions">
+                                <a href="{{ url_for('main.view_result', quiz_title=quiz.title) }}" 
+                                   class="btn btn-secondary">View Results</a>
+                                <a href="{{ url_for('main.start_quiz', quiz_title=quiz.title) }}" 
+                                   class="btn btn-primary">Retake</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .quiz-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+        margin: 1rem 0 2rem 0;
+    }
+
+    .quiz-card {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .quiz-title {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .quiz-meta {
+        font-size: 0.9rem;
+        color: #666;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .score {
+        font-weight: 500;
+        color: #28a745;
+    }
+
+    .quiz-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .btn {
+        padding: 0.5rem;
+        border-radius: 4px;
+        text-decoration: none;
+        text-align: center;
+        font-size: 0.9rem;
+        flex: 1;
+    }
+
+    .btn-primary {
+        background: #007bff;
+        color: white;
+    }
+
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+
+    .quiz-card.completed {
+        background: #f8f9fa;
+    }
+
+    h2 {
+        margin: 2rem 0 1rem 0;
+        color: #333;
+    }
+
+    .pending-approval {
+        text-align: center;
+        padding: 2rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin: 2rem 0;
+    }
+
+    .flash-message {
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 4px;
+        background: #d4edda;
+        color: #155724;
+    }
+</style>
+{% endblock %} 

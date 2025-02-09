@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Quiz App{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <!-- Overview Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon users">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-details">
+                <h3>Total Users</h3>
+                <p class="stat-number">{{ total_users }}</p>
+                {% if pending_users > 0 %}
+                    <span class="badge bg-warning">{{ pending_users }} pending approval</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon quizzes">
+                <i class="fas fa-question-circle"></i>
+            </div>
+            <div class="stat-details">
+                <h3>Total Quizzes</h3>
+                <p class="stat-number">{{ total_quizzes }}</p>
+                <span class="badge bg-success">{{ active_quizzes }} active</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Performance Overview -->
+    <div class="dashboard-section">
+        <h2><i class="fas fa-chart-line"></i> User Performance Overview</h2>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Total Attempts</th>
+                        <th>Completed</th>
+                        <th>Average Score</th>
+                        <th>Last Activity</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.quiz_attempts|length }}</td>
+                        <td>{{ user.completed_attempts|length }}</td>
+                        <td>{{ "%.1f"|format(user.average_score) if user.average_score else 'N/A' }}%</td>
+                        <td>{{ user.last_activity.strftime('%Y-%m-%d %H:%M') if user.last_activity else 'Never' }}</td>
+                        <td>
+                            <a href="{{ url_for('admin.user_performance', user_id=user.id) }}" class="btn btn-sm btn-info">
+                                <i class="fas fa-chart-bar"></i> Details
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="dashboard-section">
+        <h2><i class="fas fa-history"></i> Recent Quiz Attempts</h2>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Quiz</th>
+                        <th>Score</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for attempt in recent_attempts %}
+                    <tr>
+                        <td>{{ attempt.user.username }}</td>
+                        <td>{{ attempt.quiz.title }}</td>
+                        <td>{{ "%.1f"|format(attempt.score) if attempt.score else 'N/A' }}%</td>
+                        <td>{{ attempt.started_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            <span class="badge {% if attempt.completed_at %}bg-success{% else %}bg-warning{% endif %}">
+                                {{ 'Completed' if attempt.completed_at else 'In Progress' }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Top Performers -->
+    <div class="dashboard-section">
+        <h2><i class="fas fa-trophy"></i> Top Performers</h2>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Total Attempts</th>
+                        <th>Average Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stat in user_stats %}
+                    <tr>
+                        <td>{{ stat.username }}</td>
+                        <td>{{ stat.total_attempts }}</td>
+                        <td>{{ "%.1f"|format(stat.avg_score) }}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <a href="{{ url_for('admin.users') }}" class="action-card">
+            <i class="fas fa-user-cog"></i>
+            <span>Manage Users</span>
+        </a>
+        <a href="{{ url_for('admin.quizzes') }}" class="action-card">
+            <i class="fas fa-edit"></i>
+            <span>Manage Quizzes</span>
+        </a>
+        <a href="{{ url_for('admin.upload_quiz') }}" class="action-card">
+            <i class="fas fa-upload"></i>
+            <span>Upload New Quiz</span>
+        </a>
+    </div>
+</div>
+
+<style>
+.admin-dashboard {
+    padding: 2rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+}
+
+.stat-icon i {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.stat-icon.users {
+    background: #007bff;
+}
+
+.stat-icon.quizzes {
+    background: #28a745;
+}
+
+.stat-details h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #666;
+}
+
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0.5rem 0;
+    color: #333;
+}
+
+.dashboard-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.dashboard-section h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.dashboard-section h2 i {
+    margin-right: 0.5rem;
+    color: #666;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.table th {
+    background: #f8f9fa;
+    font-weight: 500;
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.action-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    transition: transform 0.2s;
+}
+
+.action-card:hover {
+    transform: translateY(-3px);
+}
+
+.action-card i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: #007bff;
+}
+
+.action-card span {
+    display: block;
+    font-weight: 500;
+}
+
+.badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    margin-top: 1rem;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+</style>
+{% endblock %} 
