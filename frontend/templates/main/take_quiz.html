@@ -27,10 +27,19 @@
                     <div class="options">
                         {% for option in question.options %}
                         <div class="option">
+                            {% if question.correct_answers|length == 1 %}
+                            <!-- Single choice question - use radio buttons -->
+                            <input type="radio" 
+                                   name="question_{{ question.id }}" 
+                                   value="{{ loop.index0 }}"
+                                   id="q{{ question.id }}_opt{{ loop.index }}">
+                            {% else %}
+                            <!-- Multiple choice question - use checkboxes -->
                             <input type="checkbox" 
                                    name="question_{{ question.id }}" 
                                    value="{{ loop.index0 }}"
                                    id="q{{ question.id }}_opt{{ loop.index }}">
+                            {% endif %}
                             <label for="q{{ question.id }}_opt{{ loop.index }}">{{ option }}</label>
                         </div>
                         {% endfor %}
@@ -121,14 +130,23 @@
         border: 1px solid #dee2e6;
         border-radius: 4px;
         cursor: pointer;
+        margin-bottom: 0.5rem;
+        transition: background-color 0.2s;
     }
 
     .option:hover {
         background: #f8f9fa;
     }
 
+    .option input[type="radio"],
     .option input[type="checkbox"] {
         margin-right: 1rem;
+    }
+
+    .option label {
+        margin-bottom: 0;
+        cursor: pointer;
+        flex: 1;
     }
 
     .question-navigation {
