@@ -22,11 +22,11 @@ class Config:
     PERMANENT_SESSION_LIFETIME = timedelta(hours=3)  # Extend session to 3 hours
     SESSION_REFRESH_EACH_REQUEST = True  # Refresh session on every request
 
-    # CSRF Fixes
-    WTF_CSRF_TIME_LIMIT = None  # Keeps CSRF token valid
-    SESSION_COOKIE_HTTPONLY = False  # Allows JavaScript access
+    # CSRF and Session Security Settings
+    WTF_CSRF_TIME_LIMIT = timedelta(hours=3)  # Match session lifetime
+    SESSION_COOKIE_HTTPONLY = True  # Prevent JavaScript access for security
     SESSION_COOKIE_SECURE = True  # Secure cookies
-    WTF_CSRF_CHECK_DEFAULT = False  # Less aggressive CSRF checking
+    WTF_CSRF_CHECK_DEFAULT = True  # Keep CSRF protection enabled
 
 class ProductionConfig(Config):
     DEBUG = False
