@@ -1,9 +1,11 @@
+import os
 import sys
 from pathlib import Path
 import logging
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from config import Config
+from urllib.parse import urlparse
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -19,15 +21,15 @@ from app.models.user import User
 def init_database():
     try:
         # Extract database name from URL
-        db_url = Config.SQLALCHEMY_DATABASE_URI
-        db_name = db_url.split('/')[-1]
+        db_url = urlparse( Config.SQLALCHEMY_DATABASE_URI)
+        db_name = db_url.path.lstrip('/')
         
         logger.info(f"Attempting to create database: {db_name}")
         
         # Connect to PostgreSQL server (to postgres database initially)
         conn = psycopg2.connect(
             user="postgres",
-            password="Diehard10*",
+            password=os.getenv("POSTGRES_PASSWORD"),
             host="localhost",
             port="5432",
             database="postgres"  # Connect to default postgres database first

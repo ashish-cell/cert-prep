@@ -1,0 +1,15 @@
+nohup: ignoring input
+[2025-02-22 07:33:05 +0000] [13179] [INFO] Starting gunicorn 23.0.0
+[2025-02-22 07:33:05 +0000] [13179] [INFO] Listening at: http://0.0.0.0:8000 (13179)
+[2025-02-22 07:33:05 +0000] [13179] [INFO] Using worker: sync
+[2025-02-22 07:33:05 +0000] [13180] [INFO] Booting worker with pid: 13180
+[2025-02-22 07:33:05 +0000] [13181] [INFO] Booting worker with pid: 13181
+[2025-02-22 07:33:05 +0000] [13182] [INFO] Booting worker with pid: 13182
+[2025-02-22 07:34:20 +0000] [13179] [INFO] Handling signal: hup
+[2025-02-22 07:34:20 +0000] [13179] [INFO] Hang up: Master
+[2025-02-22 07:34:20 +0000] [13257] [INFO] Booting worker with pid: 13257
+[2025-02-22 07:34:20 +0000] [13179] [ERROR] Worker (pid:13180) was sent SIGHUP!
+[2025-02-22 07:34:20 +0000] [13179] [ERROR] Worker (pid:13181) was sent SIGHUP!
+[2025-02-22 07:34:20 +0000] [13179] [ERROR] Worker (pid:13182) was sent SIGHUP!
+[2025-02-22 07:34:20 +0000] [13260] [INFO] Booting worker with pid: 13260
+[2025-02-22 07:34:20 +0000] [13259] [INFO] Booting worker with pid: 13259
