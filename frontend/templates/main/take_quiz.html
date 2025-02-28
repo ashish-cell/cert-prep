@@ -36,7 +36,7 @@
                             {% else %}
                             <!-- Multiple choice question - use checkboxes -->
                             <input type="checkbox" 
-                                   name="question_{{ question.id }}" 
+                                   name="question_{{ question.id }}[]" 
                                    value="{{ loop.index0 }}"
                                    id="q{{ question.id }}_opt{{ loop.index }}">
                             {% endif %}

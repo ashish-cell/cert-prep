@@ -7,7 +7,7 @@ class Quiz(db.Model):
     title = db.Column(db.String(100), unique=True, nullable=False)
     description = db.Column(db.Text)
     is_active = db.Column(db.Boolean, default=True)
-    duration_minutes = db.Column(db.Integer, default=30)
+    duration_minutes = db.Column(db.Integer, default=90)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     created_by = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
     

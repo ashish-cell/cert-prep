@@ -252,7 +252,7 @@ def upload_quiz():
             quiz = Quiz(
                 title=file.filename.replace('.json', ''),
                 description='',
-                duration_minutes=30,
+                duration_minutes=90,
                 created_by=current_user.id
             )
             db.session.add(quiz)

@@ -199,14 +199,13 @@ def submit_quiz(quiz_title):
         
         # Process answers
         answers = {}
-        for key, value in request.form.items():
+        for key, value in request.form.lists():
             if key.startswith('question_'):
                 question_id = key.split('_')[1]  # Keep as string
-                if isinstance(value, list):
-                    answers[question_id] = [int(v) for v in value if v.isdigit()]
-                else:
-                    answers[question_id] = [int(value)] if value.isdigit() else []
-        
+                answers[question_id] = [int(v) for v in value if v.isdigit()]
+                
+        print(f"DEBUG - Processed answers (Post-Submission): {answers}")
+
         print(f"6. Processed answers: {answers}")
         
         # Calculate correct answers
