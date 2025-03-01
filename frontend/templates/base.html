@@ -16,7 +16,8 @@
                 {% if current_user.role == 'admin' %}
                     <a href="{{ url_for('admin.index') }}" class="nav-link">Admin Dashboard</a>
                 {% else %}
-                    <a href="{{ url_for('main.dashboard') }}" class="nav-link">My Quizzes</a>
+                    <a href="{{ url_for('main.dashboard') }}" class="nav-link">Dashboard</a>
+                    <a href="{{ url_for('main.my_quizzes') }}" class="nav-link">My Quizzes</a>
                 {% endif %}
                 <a href="{{ url_for('auth.logout') }}" class="nav-link">Logout</a>
             {% else %}

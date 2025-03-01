@@ -1,0 +1,408 @@
+=== Quiz Submission Debug ===
+Quiz Title: K_3_5
+Form Data: {'attempt_id': '4fa63afd-732c-4b68-9097-63a37701279a', 'csrf_token': 'ImRiMTQyYmIyYmY4MDkwMDlhNDUwZmIwOGRhYTQ0NDhlNjI3MDVlOTci.Z8JmqA.ZQQJz7AgcyqzCXccsr5CRnMVq9U', 'question_b8cfa9d8-8342-436f-8d77-04f9dbc8e666': '2', 'question_deac43ed-1923-4644-8a74-e22f3d83fc94': '3', 'question_b39e3567-d172-477c-b3b1-fc7ee867c714': '3', 'question_561cecb5-e4e2-4adb-9f46-e94fe12acc84': '1', 'question_3523e84e-589a-4efb-a483-76c5ab49c2b9[]': '1'}
+
+Processed answers: {'b8cfa9d8-8342-436f-8d77-04f9dbc8e666': [2], 'deac43ed-1923-4644-8a74-e22f3d83fc94': [3], 'b39e3567-d172-477c-b3b1-fc7ee867c714': [3], '561cecb5-e4e2-4adb-9f46-e94fe12acc84': [1], '3523e84e-589a-4efb-a483-76c5ab49c2b9[]': [1, 2]}
+
+Question ID: b8cfa9d8-8342-436f-8d77-04f9dbc8e666
+Question Text: Amazon CloudWatch billing metric data is stored in which AWS Region?
+Correct Answers (raw): [0]
+Correct Answers Type: <class 'list'>
+User answers: [2]
+Correct answers: [0]
+Question b8cfa9d8-8342-436f-8d77-04f9dbc8e666 is WRONG
+
+Question ID: deac43ed-1923-4644-8a74-e22f3d83fc94
+Question Text: A startup runs its proprietary application on docker containers. As a Cloud Practitioner, which AWS service would you recommend so that the startup can run containers and still have access to the underlying servers?
+Correct Answers (raw): [3]
+Correct Answers Type: <class 'list'>
+User answers: [3]
+Correct answers: [3]
+Question deac43ed-1923-4644-8a74-e22f3d83fc94 is CORRECT
+
+Question ID: b39e3567-d172-477c-b3b1-fc7ee867c714
+Question Text: Which AWS service can be used as an in-memory database with high-performance and low latency?
+Correct Answers (raw): [3]
+Correct Answers Type: <class 'list'>
+User answers: [3]
+Correct answers: [3]
+Question b39e3567-d172-477c-b3b1-fc7ee867c714 is CORRECT
+
+Question ID: 561cecb5-e4e2-4adb-9f46-e94fe12acc84
+Question Text: An enterprise is developing a roadmap for its cloud adoption journey and wants to ensure its IT investments align with business objectives and deliver measurable value. Which perspective of the AWS Cloud Adoption Framework (CAF) addresses the strategy management capability?
+Correct Answers (raw): [0]
+Correct Answers Type: <class 'list'>
+User answers: [1]
+Correct answers: [0]
+Question 561cecb5-e4e2-4adb-9f46-e94fe12acc84 is WRONG
+
+Question ID: 3523e84e-589a-4efb-a483-76c5ab49c2b9
+Question Text: Which of the following are components of an AWS Site-to-Site VPN? (Select two)
+Correct Answers (raw): [1, 2]
+Correct Answers Type: <class 'list'>
+Question 3523e84e-589a-4efb-a483-76c5ab49c2b9 was SKIPPED
+
+Question ID: f021e504-dfce-4f42-ba2a-72aac8043c8b
+Question Text: An IT company is on a cost-optimization spree and wants to identify all Amazon Elastic Compute Cloud (Amazon EC2) instances that are under-utilized. Which AWS services can be used off-the-shelf to address this use-case without needing any manual configurations? (Select two)
+Correct Answers (raw): [0]
+Correct Answers Type: <class 'list'>
+Question f021e504-dfce-4f42-ba2a-72aac8043c8b was SKIPPED
+
+Question ID: fefa5ef7-6aa2-4854-9e62-4e57c88a62bc
+Question Text: A leading research firm needs to access information available in old patents and documents (such as PDFs, Text Files, Word documents, etc) present in its huge knowledge base. The firm is looking for a powerful search tool that can dig into these knowledge resources and return the most relevant files/documents. Which of the following is the correct service to address this requirement?
+Correct Answers (raw): [3]
+Correct Answers Type: <class 'list'>
+Question fefa5ef7-6aa2-4854-9e62-4e57c88a62bc was SKIPPED
+
+Question ID: f39b2deb-4226-4e97-a626-fe343fbc106f
+Question Text: Which of the following AWS services offer block-level storage? (Select two)
+Correct Answers (raw): [1]
+Correct Answers Type: <class 'list'>
+Question f39b2deb-4226-4e97-a626-fe343fbc106f was SKIPPED
+
+Question ID: 921bcd99-8a43-4280-bd5f-1b2fa8d0cabf
+Question Text: Which of the following capabilities does Amazon Rekognition provide as a ready-to-use feature?
+Correct Answers (raw): [3]
+Correct Answers Type: <class 'list'>
+Question 921bcd99-8a43-4280-bd5f-1b2fa8d0cabf was SKIPPED
+
+Question ID: cbb19d2e-b0a6-4346-89f0-4ccf44d5731b
+Question Text: Which of the following use cases is best suited for Amazon EFS Standard-Infrequent Access (EFS Standard-IA) storage class?
+Correct Answers (raw): [1]
+Correct Answers Type: <class 'list'>
+Question cbb19d2e-b0a6-4346-89f0-4ccf44d5731b was SKIPPED
+
+Question ID: b473be7a-7984-45fd-bfbf-6ee042bd9406
+Question Text: Which of the following AWS services are regional in scope? (Select two)
+Correct Answers (raw): [1, 3]
+Correct Answers Type: <class 'list'>
+Question b473be7a-7984-45fd-bfbf-6ee042bd9406 was SKIPPED
+
+Question ID: f0206630-ea39-408d-89a1-e8656f757135
+Question Text: Which of the following statements are true about Cost Allocation Tags in AWS Billing? (Select two)
+Correct Answers (raw): [0, 2]
+Correct Answers Type: <class 'list'>
+Question f0206630-ea39-408d-89a1-e8656f757135 was SKIPPED
+
+Question ID: 7e2974a8-3369-40c0-8f41-f23e4909e9cc
+Question Text: Which AWS service protects your AWS account by monitoring malicious activity and detecting threats?
+Correct Answers (raw): [0]
+Correct Answers Type: <class 'list'>
+Question 7e2974a8-3369-40c0-8f41-f23e4909e9cc was SKIPPED
+
+Question ID: 15bf87a1-a40d-4f67-b5f5-82ec7ff2e44d
+Question Text: Compared to the on-demand instance prices, what is the highest possible discount offered for reserved instances (RI)?
+Correct Answers (raw): [3]
+Correct Answers Type: <class 'list'>
+Question 15bf87a1-a40d-4f67-b5f5-82ec7ff2e44d was SKIPPED
+
+Question ID: cedcab41-c98a-4120-aa13-fafdf0f5ae7c
+Question Text: Which AWS service will you use to privately connect your virtual private cloud (VPC) to Amazon Simple Storage Service (Amazon S3)?
+Correct Answers (raw): [1]
+Correct Answers Type: <class 'list'>
+Question cedcab41-c98a-4120-aa13-fafdf0f5ae7c was SKIPPED
+
+Question ID: 74dd6178-b43f-4bd7-884e-1e423b323dec
+Question Text: A development team is looking for a forum where the most frequent questions and requests from AWS customers are listed along with AWS provided solutions.
+
+Which AWS forum/service can be used for troubleshooting an issue or checking for a solution?
+Correct Answers (raw): [1]
+Correct Answers Type: <class 'list'>
+Question 74dd6178-b43f-4bd7-884e-1e423b323dec was SKIPPED
+
+Question ID: 6a09942d-6c3f-438b-a93e-019e1cf5b1af
+Question Text: Which budget types can be created under AWS Budgets (Select three)?
+Correct Answers (raw): [1, 3]
+Correct Answers Type: <class 'list'>
+Question 6a09942d-6c3f-438b-a93e-019e1cf5b1af was SKIPPED
+
+Question ID: 7796e2c3-39bb-479f-87d0-5ddc6683e512
+Question Text: An IT company has a hybrid cloud architecture and it wants to centralize the server logs for its Amazon Elastic Compute Cloud (Amazon EC2) instances and on-premises servers. Which of the following is the MOST effective for this use-case?
+Correct Answers (raw): [2]
+Correct Answers Type: <class 'list'>
+Question 7796e2c3-39bb-479f-87d0-5ddc6683e512 was SKIPPED
+
+Question ID: ea20af42-7eaa-493c-bb41-dc674fdd5773
+Question Text: Which of the following improves the availability for a fleet of Amazon Elastic Compute Cloud (Amazon EC2) instances?
+Correct Answers (raw): [1]
+Correct Answers Type: <class 'list'>
+Question ea20af42-7eaa-493c-bb41-dc674fdd5773 was SKIPPED
+
+Question ID: b8b7f2c4-899b-44fe-9b0b-18111449abe7
+Question Text: Which of the following is the best way to protect your data from accidental deletion on Amazon S3?
+Correct Answers (raw): [1]
+Correct Answers Type: <class 'list'>
+Question b8b7f2c4-899b-44fe-9b0b-18111449abe7 was SKIPPED
+
+Question ID: 9938717b-1252-4d7b-a1ce-b0c1c3a33bbf
+Question Text: Which of the following is a part of the AWS Global Infrastructure?
+Correct Answers (raw): [3]
+Correct Answers Type: <class 'list'>
+Question 9938717b-1252-4d7b-a1ce-b0c1c3a33bbf was SKIPPED
+
+Question ID: f34172d4-71e9-46d1-b5db-73b29b719cc4
+Question Text: An IT company has deployed a static website on Amazon Simple Storage Service (Amazon S3), but the website is still inaccessible. As a Cloud Practioner, which of the following solutions would you suggest to address this issue?
+Correct Answers (raw): [1]
+Correct Answers Type: <class 'list'>
+Question f34172d4-71e9-46d1-b5db-73b29b719cc4 was SKIPPED
+
+Question ID: ddaa6a27-94cd-4228-966d-6de8a80260bc
+Question Text: Which of the following AWS services have data encryption automatically enabled? (Select two)?
+Correct Answers (raw): [0]
+Correct Answers Type: <class 'list'>
+Question ddaa6a27-94cd-4228-966d-6de8a80260bc was SKIPPED
+
+Question ID: 21cdc3f0-6eba-4122-9afb-71752ac50f7d
+Question Text: A research group wants to provision an Amazon Elastic Compute Cloud (Amazon EC2) instance for a flexible application that can be interrupted. As a Cloud Practitioner, which of the following would you recommend as the MOST cost-optimal option?
+Correct Answers (raw): [2]
+Correct Answers Type: <class 'list'>
+Question 21cdc3f0-6eba-4122-9afb-71752ac50f7d was SKIPPED
+
+Question ID: f107678a-1cf7-4d96-bf3d-e295e7ed5703
+Question Text: What is the primary benefit of deploying an Amazon Relational Database Service (Amazon RDS) database in a Read Replica configuration?
+Correct Answers (raw): [1]
+Correct Answers Type: <class 'list'>
+Question f107678a-1cf7-4d96-bf3d-e295e7ed5703 was SKIPPED
+
+Question ID: b942f344-0103-4fbd-bd97-5d34a3bd3f94
+Question Text: A financial services company must meet compliance requirements that mandate storing multiple copies of data in geographically distant locations. As the company uses Amazon Simple Storage Service (Amazon S3) as its main storage service, which of the following represents the MOST resource-efficient solution for this use-case?
+Correct Answers (raw): [0]
+Correct Answers Type: <class 'list'>
+Question b942f344-0103-4fbd-bd97-5d34a3bd3f94 was SKIPPED
+
+Question ID: 8f514c6e-1851-4dc2-ac5a-d7acc9eec3d4
+Question Text: AWS Identity and Access Management (AWS IAM) policies are written as JSON documents. Which of the following are mandatory elements of an IAM policy?
+Correct Answers (raw): [0]
+Correct Answers Type: <class 'list'>
+Question 8f514c6e-1851-4dc2-ac5a-d7acc9eec3d4 was SKIPPED
+
+Question ID: c404815a-1423-4f01-bc17-d7d8a2136af0
+Question Text: Which AWS service can be used for online analytical processing?
+Correct Answers (raw): [3]
+Correct Answers Type: <class 'list'>
+Question c404815a-1423-4f01-bc17-d7d8a2136af0 was SKIPPED
+
+Question ID: db876777-062f-4ae6-a9c7-ec175ea7f077
+Question Text: Under the AWS Shared Responsibility Model, which of the following is the responsibility of a customer regarding AWS Lambda?
+Correct Answers (raw): [2]
+Correct Answers Type: <class 'list'>
+Question db876777-062f-4ae6-a9c7-ec175ea7f077 was SKIPPED
+
+Question ID: a99c5a7f-d518-4ce6-9e61-60ee635894ab
+Question Text: Which pillar of the AWS Well-Architected Framework recommends maintaining infrastructure as code (IaC)?
+Correct Answers (raw): [2]
+Correct Answers Type: <class 'list'>
+Question a99c5a7f-d518-4ce6-9e61-60ee635894ab was SKIPPED
+
+Question ID: 8e86bf89-bd52-4f40-b94e-09316c3709eb
+Question Text: A financial services enterprise plans to enable Multi-Factor Authentication (MFA) for its employees. For ease of travel, they prefer not to use any physical devices to implement Multi-Factor Authentication (MFA). Which of the below options is best suited for this use case?
+Correct Answers (raw): [1]
+Correct Answers Type: <class 'list'>
+Question 8e86bf89-bd52-4f40-b94e-09316c3709eb was SKIPPED
+
+Question ID: 75a7e5bb-46ea-4f2b-ba50-cf02134cb6a1
+Question Text: Which of the following are recommended best practices for AWS Identity and Access Management (AWS IAM) service? (Select two)
+Correct Answers (raw): [0, 1]
+Correct Answers Type: <class 'list'>
+Question 75a7e5bb-46ea-4f2b-ba50-cf02134cb6a1 was SKIPPED
+
+Question ID: f667afd8-f237-4201-8711-340eeef57798
+Question Text: As per the AWS Shared Responsibility Model, Security and Compliance is a shared responsibility between AWS and the customer. Which of the following security services/utilities falls under the purview of AWS under the AWS Shared Responsibility Model?
+Correct Answers (raw): [3]
+Correct Answers Type: <class 'list'>
+Question f667afd8-f237-4201-8711-340eeef57798 was SKIPPED
+
+Question ID: 7d242c3f-a896-4eeb-b76f-3754813ba2ac
+Question Text: Which of the following is correct regarding the AWS Shield Advanced pricing?
+Correct Answers (raw): [2]
+Correct Answers Type: <class 'list'>
+Question 7d242c3f-a896-4eeb-b76f-3754813ba2ac was SKIPPED
+
+Question ID: dd10c2e1-d4e5-4b0b-8298-f2dfc5863a26
+Question Text: Which of the following statements are CORRECT about the AWS Auto Scaling group? (Select two)
+Correct Answers (raw): [2]
+Correct Answers Type: <class 'list'>
+Question dd10c2e1-d4e5-4b0b-8298-f2dfc5863a26 was SKIPPED
+
+Question ID: be78192a-bffb-4cf3-8f5a-75c4d4b5d376
+Question Text: Which Amazon Simple Storage Service (Amazon S3) storage class offers the lowest availability?
+Correct Answers (raw): [2]
+Correct Answers Type: <class 'list'>
+Question be78192a-bffb-4cf3-8f5a-75c4d4b5d376 was SKIPPED
+
+Question ID: 90cd71dc-2155-4ebe-a384-af67d6a0734b
+Question Text: AWS Trusted Advisor analyzes your AWS environment and provides best practice recommendations for which of the following categories? (Select two)
+Correct Answers (raw): [1, 3]
+Correct Answers Type: <class 'list'>
+Question 90cd71dc-2155-4ebe-a384-af67d6a0734b was SKIPPED
+
+Question ID: 8f5dda11-4994-4ff8-baeb-ebb1264510e8
+Question Text: According to the AWS Shared Responsibility Model, which of the following are the responsibilities of the customer? (Select two)
+Correct Answers (raw): [1, 3]
+Correct Answers Type: <class 'list'>
+Question 8f5dda11-4994-4ff8-baeb-ebb1264510e8 was SKIPPED
+
+Question ID: ba5877e1-1378-4b8d-aad6-6d6a22d4ce55
+Question Text: An e-commerce company uses AWS Cloud and would like to receive separate invoices for development and production environments. As a Cloud Practioner, which of the following solutions would you recommend for this use-case?
+Correct Answers (raw): [0]
+Correct Answers Type: <class 'list'>
+Question ba5877e1-1378-4b8d-aad6-6d6a22d4ce55 was SKIPPED
+
+Question ID: 48629e39-f5eb-47b1-8e6a-530b15592ee7
+Question Text: Which Amazon Route 53 routing policy would you use when you want to route your traffic in an active-passive configuration?
+Correct Answers (raw): [3]
+Correct Answers Type: <class 'list'>
+Question 48629e39-f5eb-47b1-8e6a-530b15592ee7 was SKIPPED
+
+Question ID: ca5fcaf2-eba6-4b6f-86d8-81a7b78a878a
+Question Text: Which of the following AWS services specialize in data migration from on-premises to AWS Cloud? (Select two)
+Correct Answers (raw): [2, 3]
+Correct Answers Type: <class 'list'>
+Question ca5fcaf2-eba6-4b6f-86d8-81a7b78a878a was SKIPPED
+
+Question ID: cf6e69ce-3b7f-442a-84d9-eec155fab833
+Question Text: Which of the following Cloud Computing models does the 'gmail' service represent?
+Correct Answers (raw): [0]
+Correct Answers Type: <class 'list'>
+Question cf6e69ce-3b7f-442a-84d9-eec155fab833 was SKIPPED
+
+Question ID: 970ec314-292a-4d2d-a588-3d8bacd9e545
+Question Text: A research lab wants to optimize the caching capabilities for its scientific computations application running on Amazon Elastic Compute Cloud (Amazon EC2) instances. Which Amazon Elastic Compute Cloud (Amazon EC2) storage option is best suited for this use-case?
+Correct Answers (raw): [1]
+Correct Answers Type: <class 'list'>
+Question 970ec314-292a-4d2d-a588-3d8bacd9e545 was SKIPPED
+
+Question ID: 4a8f15cb-5e17-499f-a90e-0e6ef072b0c3
+Question Text: As a Cloud Practitioner, which Amazon Simple Storage Service (Amazon S3) storage class would you recommend for data archival?
+Correct Answers (raw): [3]
+Correct Answers Type: <class 'list'>
+Question 4a8f15cb-5e17-499f-a90e-0e6ef072b0c3 was SKIPPED
+
+Question ID: eabbfc50-15ba-43d4-82e9-ac7ae592c004
+Question Text: A company has a static website hosted on an Amazon Simple Storage Service (Amazon S3) bucket in an AWS Region in Asia. Although most of its users are in Asia, now it wants to drive growth globally. How can it improve the global performance of its static website?
+
+Correct Answers (raw): [0]
+Correct Answers Type: <class 'list'>
+Question eabbfc50-15ba-43d4-82e9-ac7ae592c004 was SKIPPED
+
+Question ID: 60b66aa6-002e-40ef-9da6-0166080f00cc
+Question Text: A customer is running a comparative study of pricing models of Amazon EFS and Amazon Elastic Block Store (Amazon EBS) that are used with the Amazon EC2 instances that host the application. Which of the following statements are correct regarding this use-case? (Select two)
+Correct Answers (raw): [1, 3]
+Correct Answers Type: <class 'list'>
+Question 60b66aa6-002e-40ef-9da6-0166080f00cc was SKIPPED
+
+Question ID: 1213b2f9-2423-4376-895b-fb07db614d4a
+Question Text: AWS Lambda pricing is based on which of the following criteria? (Select two)
+Correct Answers (raw): [1, 2]
+Correct Answers Type: <class 'list'>
+Question 1213b2f9-2423-4376-895b-fb07db614d4a was SKIPPED
+
+Question ID: f691a1c0-76cf-45e9-9c06-0c85a304c22d
+Question Text: Which AWS service can be used to automate code deployment to Amazon Elastic Compute Cloud (Amazon EC2) instances as well as on-premises instances?
+Correct Answers (raw): [2]
+Correct Answers Type: <class 'list'>
+Question f691a1c0-76cf-45e9-9c06-0c85a304c22d was SKIPPED
+
+Question ID: 5c243633-3cd6-46d4-abfa-9ad4c8418c2c
+Question Text: Which feature of AWS Cloud offers the ability to innovate faster and rapidly develop, test and launch software applications?
+Correct Answers (raw): [2]
+Correct Answers Type: <class 'list'>
+Question 5c243633-3cd6-46d4-abfa-9ad4c8418c2c was SKIPPED
+
+Question ID: 86b31302-3451-4add-bdf5-c7f08432a484
+Question Text: Which of the following statements are CORRECT regarding security groups and network access control lists (network ACL)? (Select two)
+
+Correct Answers (raw): [1, 3]
+Correct Answers Type: <class 'list'>
+Question 86b31302-3451-4add-bdf5-c7f08432a484 was SKIPPED
+
+Question ID: b3cb5ce7-4a3a-4630-a3d0-dd87c38db693
+Question Text: Which AWS service can be used to execute code triggered by new files being uploaded to Amazon Simple Storage Service (Amazon S3)?
+Correct Answers (raw): [0]
+Correct Answers Type: <class 'list'>
+Question b3cb5ce7-4a3a-4630-a3d0-dd87c38db693 was SKIPPED
+
+Question ID: 1b817865-beba-431b-952c-e636fe35a8d3
+Question Text: A startup has just moved its IT infrastructure to AWS Cloud. The CTO would like to receive detailed reports that break down the startup's AWS costs by the hour in an Amazon Simple Storage Service (Amazon S3) bucket. As a Cloud Practitioner, which AWS service would you recommend for this use-case?
+Correct Answers (raw): [1]
+Correct Answers Type: <class 'list'>
+Question 1b817865-beba-431b-952c-e636fe35a8d3 was SKIPPED
+
+Question ID: 8579aa67-f0ec-4083-af6f-28cc21fa239d
+Question Text: A global e-commerce platform wants to restrict access to its website from specific countries to comply with regional regulations. Which AWS service is best suited to implement this restriction?
+Correct Answers (raw): [2]
+Correct Answers Type: <class 'list'>
+Question 8579aa67-f0ec-4083-af6f-28cc21fa239d was SKIPPED
+
+Question ID: f4b3d953-d19a-4952-97ed-b9ae7bd09bfa
+Question Text: A medical device company is looking for a durable and cost-effective way of storing their historic data. Due to compliance requirements, the data must be stored for 10 years. Which AWS Storage solution will you suggest?
+Correct Answers (raw): [1]
+Correct Answers Type: <class 'list'>
+Question f4b3d953-d19a-4952-97ed-b9ae7bd09bfa was SKIPPED
+
+Question ID: e00b6733-e156-4666-978f-ffa5360cbf52
+Question Text: An AWS user is trying to launch an Amazon Elastic Compute Cloud (Amazon EC2) instance in a given region. What is the region-specific constraint that the Amazon Machine Image (AMI) must meet so that it can be used for this Amazon Elastic Compute Cloud (Amazon EC2) instance?
+Correct Answers (raw): [0]
+Correct Answers Type: <class 'list'>
+Question e00b6733-e156-4666-978f-ffa5360cbf52 was SKIPPED
+
+Question ID: 40d7485f-8572-48af-a3f7-14fb1bafe049
+Question Text: An AWS hardware failure has impacted one of your Amazon Elastic Block Store (Amazon EBS) volumes. Which AWS service will alert you of the affected resources and provide a remedial action?
+Correct Answers (raw): [2]
+Correct Answers Type: <class 'list'>
+Question 40d7485f-8572-48af-a3f7-14fb1bafe049 was SKIPPED
+
+Question ID: 96ecd0b9-2e2f-40fb-8aa5-ec70958cd548
+Question Text: An organization maintains separate Amazon Virtual Private Clouds (Amazon VPC) for each of its departments. With expanding business, the organization now wants to connect all Amazon Virtual Private Clouds (Amazon VPC) for better departmental collaboration. Which AWS service will help the organization tackle the issue effectively?
+Correct Answers (raw): [2]
+Correct Answers Type: <class 'list'>
+Question 96ecd0b9-2e2f-40fb-8aa5-ec70958cd548 was SKIPPED
+
+Question ID: a02707f5-fd2d-4574-a3ca-569c21382c38
+Question Text: An IT company would like to move its IT resources (including any data and applications) from an AWS Region in the US to another AWS Region in Europe. Which of the following represents the correct solution for this use-case?
+Correct Answers (raw): [3]
+Correct Answers Type: <class 'list'>
+Question a02707f5-fd2d-4574-a3ca-569c21382c38 was SKIPPED
+
+Question ID: df7ceb40-8f22-4de0-9d8f-6a167871f5f9
+Question Text: Which of the following are correct statements regarding the AWS Shared Responsibility Model? (Select two)
+Correct Answers (raw): [1, 2]
+Correct Answers Type: <class 'list'>
+Question df7ceb40-8f22-4de0-9d8f-6a167871f5f9 was SKIPPED
+
+Question ID: 47c2c84d-f945-4210-adf0-646e9872da46
+Question Text: Which AWS services/features support High Availability by default? (Select two)
+Correct Answers (raw): [1, 2]
+Correct Answers Type: <class 'list'>
+Question 47c2c84d-f945-4210-adf0-646e9872da46 was SKIPPED
+
+Question ID: 5321ada9-d7f9-4a81-b85c-8a125d6bfc4f
+Question Text: Which of the following AWS entities provides the information required to launch an Amazon Elastic Compute Cloud (Amazon EC2) instance?
+Correct Answers (raw): [0]
+Correct Answers Type: <class 'list'>
+Question 5321ada9-d7f9-4a81-b85c-8a125d6bfc4f was SKIPPED
+
+Question ID: 93b23cdb-fa5a-453a-bebc-95aeb8db214c
+Question Text: Which of the following statements is correct regarding the Amazon Elastic File System (Amazon EFS) storage service?
+Correct Answers (raw): [2]
+Correct Answers Type: <class 'list'>
+Question 93b23cdb-fa5a-453a-bebc-95aeb8db214c was SKIPPED
+
+Question ID: ec79157f-93e8-417c-af13-171d82105f06
+Question Text: A multi-national company has its business-critical data stored on a fleet of Amazon Elastic Compute Cloud (Amazon EC2) instances, in various countries, configured in region-specific compliance rules. To demonstrate compliance, the company needs to submit historical configurations on a regular basis. Which AWS service is best suited for this requirement?
+Correct Answers (raw): [2]
+Correct Answers Type: <class 'list'>
+Question ec79157f-93e8-417c-af13-171d82105f06 was SKIPPED
+
+Question ID: b3ff3a08-dbed-420e-a938-d904976c9998
+Question Text: Which AWS service will you use if you have to move large volumes of on-premises data to AWS Cloud from a remote location with limited bandwidth?
+Correct Answers (raw): [3]
+Correct Answers Type: <class 'list'>
+Question b3ff3a08-dbed-420e-a938-d904976c9998 was SKIPPED
+
+Question ID: bb833022-2e1b-41a8-8eb0-f4f15123aa58
+Question Text: A cyber-security agency uses AWS Cloud and wants to carry out security assessments on its own AWS infrastructure without any prior approval from AWS. Which of the following describes/facilitates this practice?
+Correct Answers (raw): [2]
+Correct Answers Type: <class 'list'>
+Question bb833022-2e1b-41a8-8eb0-f4f15123aa58 was SKIPPED
+

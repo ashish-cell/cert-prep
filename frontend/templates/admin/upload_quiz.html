@@ -7,13 +7,26 @@
     <h1>Upload New Quiz</h1>
     
     <div class="upload-form-container">
-        <form action="{{ url_for('main.upload_quiz') }}" method="post" enctype="multipart/form-data">
+        <form action="{{ url_for('admin.upload_quiz') }}" method="post" enctype="multipart/form-data">
             {{ form.csrf_token }}
             
             <div class="form-group">
                 <label for="quiz_file">Select Quiz File (JSON)</label>
                 <input type="file" id="quiz_file" name="quiz_file" accept=".json" required>
                 <small class="form-text text-muted">Please upload a JSON file containing quiz questions.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="quiz_time">Quiz Time Limit (minutes)</label>
+                <input type="number" 
+                       id="quiz_time" 
+                       name="quiz_time" 
+                       min="1" 
+                       max="180" 
+                       value="60" 
+                       required 
+                       class="form-control">
+                <small class="form-text text-muted">Set the time limit for completing this quiz (1-180 minutes)</small>
             </div>
 
             <div class="preview-section" style="display: none;">
@@ -31,6 +44,25 @@
 
     <div class="format-guide">
         <h3>JSON Format Guide</h3>
+        <p>Both formats are accepted:</p>
+        
+        <h4>Format 1: Questions Array</h4>
+        <pre><code>[
+    {
+        "question_text": "Your question here?",
+        "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+        "correct_answers": [0],
+        "explanations": {
+            "0": "Explanation for option 1",
+            "1": "Explanation for option 2",
+            "2": "Explanation for option 3",
+            "3": "Explanation for option 4"
+        },
+        "domain": "Category/Domain"
+    }
+]</code></pre>
+
+        <h4>Format 2: Questions Object</h4>
         <pre><code>{
     "questions": [
         {
@@ -81,6 +113,15 @@
     padding: 0.5rem;
     border: 1px solid #dee2e6;
     border-radius: 4px;
+}
+
+.form-group input[type="number"] {
+    display: block;
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    font-size: 1rem;
 }
 
 .form-text {
@@ -141,6 +182,10 @@
     color: #007bff;
     background: none;
 }
+
+.form-control {
+    max-width: 200px;
+}
 </style>
 
 <script>
@@ -155,26 +200,68 @@ function previewQuiz() {
         
         reader.onload = function(e) {
             try {
-                const quiz = JSON.parse(e.target.result);
-                let preview = `<p><strong>Total Questions:</strong> ${quiz.length}</p>`;
+                const data = JSON.parse(e.target.result);
+                let questions;
+                
+                // Handle both formats: direct array or {questions: [...]}
+                if (Array.isArray(data)) {
+                    questions = data;
+                } else if (data.questions && Array.isArray(data.questions)) {
+                    questions = data.questions;
+                } else {
+                    throw new Error('Invalid quiz format: must be an array of questions or an object with questions array');
+                }
+
+                let preview = `<p><strong>Total Questions:</strong> ${questions.length}</p>`;
+                
+                // Show domains if they exist
+                const domains = [...new Set(questions.map(q => q.domain))].filter(Boolean);
+                if (domains.length > 0) {
+                    preview += `<p><strong>Domains:</strong> ${domains.join(', ')}</p>`;
+                }
+
                 preview += '<h4>Sample Questions:</h4><ul>';
-                quiz.slice(0, 3).forEach((q, i) => {
-                    preview += `<li><strong>Q${i+1}:</strong> ${q.question_text}</li>`;
+                questions.slice(0, 3).forEach((q, i) => {
+                    preview += `
+                        <li>
+                            <strong>Q${i+1}:</strong> ${q.question_text}<br>
+                            <small>Options: ${q.options.length}, 
+                            Correct Answer(s): ${q.correct_answers.length},
+                            Domain: ${q.domain || 'Not specified'}</small>
+                        </li>`;
                 });
-                if (quiz.length > 3) {
+                if (questions.length > 3) {
                     preview += '<li>...</li>';
                 }
                 preview += '</ul>';
+                
+                // Show quiz time
+                const quizTime = document.getElementById('quiz_time').value;
+                preview += `<p><strong>Quiz Time Limit:</strong> ${quizTime} minutes</p>`;
+                
                 previewContent.innerHTML = preview;
                 previewSection.style.display = 'block';
             } catch (error) {
-                previewContent.innerHTML = '<p class="error">Error parsing quiz file. Please check the format.</p>';
+                previewContent.innerHTML = `<p class="error">Error parsing quiz file: ${error.message}<br>Please check the format matches the guide below.</p>`;
                 previewSection.style.display = 'block';
             }
         };
         
         reader.readAsText(file);
+    } else {
+        previewContent.innerHTML = '<p class="error">Please select a file first</p>';
+        previewSection.style.display = 'block';
     }
 }
+
+// Add event listener to file input to auto-preview when file is selected
+document.getElementById('quiz_file').addEventListener('change', previewQuiz);
+
+// Add event listener to quiz time input to update preview when time changes
+document.getElementById('quiz_time').addEventListener('change', function() {
+    if (document.querySelector('.preview-section').style.display === 'block') {
+        previewQuiz();
+    }
+});
 </script>
 {% endblock %} 

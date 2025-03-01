@@ -246,13 +246,28 @@ def upload_quiz():
             return redirect(url_for('admin.quizzes'))
 
         try:
-            questions = json.load(file)
+            # Get quiz time from form
+            quiz_time = int(request.form.get('quiz_time', 60))
+            if not 1 <= quiz_time <= 180:
+                flash('Quiz time must be between 1 and 180 minutes')
+                return redirect(url_for('admin.quizzes'))
+
+            quiz_data = json.load(file)
             
-            # Create quiz
+            # Handle both formats: direct array or {questions: [...]}
+            if isinstance(quiz_data, list):
+                questions = quiz_data
+            elif isinstance(quiz_data, dict) and 'questions' in quiz_data:
+                questions = quiz_data['questions']
+            else:
+                flash('Invalid quiz format: must be an array of questions or an object with questions array')
+                return redirect(url_for('admin.quizzes'))
+            
+            # Create quiz with the specified duration
             quiz = Quiz(
                 title=file.filename.replace('.json', ''),
                 description='',
-                duration_minutes=90,
+                duration_minutes=quiz_time,  # Use the submitted quiz time
                 created_by=current_user.id
             )
             db.session.add(quiz)
@@ -275,6 +290,10 @@ def upload_quiz():
             db.session.commit()
             flash('Quiz uploaded successfully!')
 
+        except json.JSONDecodeError:
+            flash('Invalid JSON file format')
+        except KeyError as e:
+            flash(f'Missing required field in quiz data: {str(e)}')
         except Exception as e:
             db.session.rollback()
             flash(f'Error uploading quiz: {str(e)}')
@@ -282,7 +301,7 @@ def upload_quiz():
         return redirect(url_for('admin.quizzes'))
 
     # GET request - show upload form
-    return render_template('admin/quiz_form.html', form=form)
+    return render_template('admin/upload_quiz.html', form=form)
 
 @admin.route('/quiz/<quiz_title>/details')
 @login_required

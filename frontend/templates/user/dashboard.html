@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block title %}My Dashboard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4">My Dashboard</h1>
+    
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Total Attempts</h5>
+                    <p class="card-text display-4">{{ total_attempts }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Completed Quizzes</h5>
+                    <p class="card-text display-4">{{ total_completed }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Average Score</h5>
+                    <p class="card-text display-4">{{ avg_score|round(1) }}%</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Unique Quizzes</h5>
+                    <p class="card-text display-4">{{ total_unique_quizzes }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Activity and Best Performances -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2 class="h5 mb-0">Recent Activity</h2>
+                </div>
+                <div class="card-body">
+                    {% if recent_attempts|length > 0 %}
+                        <div class="list-group">
+                            {% for attempt in recent_attempts %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{ attempt.quiz.title }}</h5>
+                                        {% if attempt.completed_at %}
+                                            <span class="badge bg-success">{{ attempt.score|round(1) }}%</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">In Progress</span>
+                                        {% endif %}
+                                    </div>
+                                    <p class="mb-1">
+                                        Started: {{ attempt.started_at.strftime('%Y-%m-%d %H:%M') }}
+                                        {% if attempt.completed_at %}
+                                            <br>Completed: {{ attempt.completed_at.strftime('%Y-%m-%d %H:%M') }}
+                                        {% endif %}
+                                    </p>
+                                    <div class="mt-2">
+                                        {% if attempt.completed_at %}
+                                            <a href="{{ url_for('main.view_result', quiz_title=attempt.quiz.title) }}" class="btn btn-sm btn-primary">View Results</a>
+                                        {% else %}
+                                            <a href="{{ url_for('main.start_quiz', quiz_title=attempt.quiz.title) }}" class="btn btn-sm btn-primary">Continue</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">You haven't attempted any quizzes yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2 class="h5 mb-0">Best Performances</h2>
+                </div>
+                <div class="card-body">
+                    {% if best_performances|length > 0 %}
+                        <div class="list-group">
+                            {% for item in best_performances %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{ item.quiz.title }}</h5>
+                                        <span class="badge bg-success">{{ item.score|round(1) }}%</span>
+                                    </div>
+                                    <p class="mb-1">Completed: {{ item.date.strftime('%Y-%m-%d %H:%M') }}</p>
+                                    <div class="mt-2">
+                                        <a href="{{ url_for('main.view_result', quiz_title=item.quiz.title) }}" class="btn btn-sm btn-primary">View Results</a>
+                                        <a href="{{ url_for('main.start_quiz', quiz_title=item.quiz.title) }}" class="btn btn-sm btn-outline-primary">Retake Quiz</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">You haven't completed any quizzes yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Available Quizzes in Grid Layout -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="h5 mb-0">Available Quizzes</h2>
+        </div>
+        <div class="card-body">
+            {% if available_quizzes|length > 0 %}
+                <div class="quiz-grid">
+                    {% for quiz in available_quizzes %}
+                        <div class="quiz-card">
+                            <div class="quiz-header">
+                                <h4>{{ quiz.title }}</h4>
+                                <span class="status-badge active">Available</span>
+                            </div>
+                            <div class="quiz-details">
+                                <p><strong>Questions:</strong> {{ quiz.questions|length }}</p>
+                                <p><strong>Duration:</strong> {{ quiz.duration_minutes }} minutes</p>
+                                <p><strong>Created:</strong> {{ quiz.created_at.strftime('%Y-%m-%d') }}</p>
+                                {% if quiz.description %}
+                                    <p><strong>Description:</strong> {{ quiz.description }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="quiz-actions">
+                                <a href="{{ url_for('main.start_quiz', quiz_title=quiz.title) }}" class="btn btn-primary">Start Quiz</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted">No new quizzes available.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+/* Additional styles for quiz grid */
+.quiz-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.quiz-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.status-badge.active {
+    background: #28a745;
+    color: white;
+}
+
+.quiz-details {
+    margin-bottom: 1rem;
+}
+
+.quiz-details p {
+    margin: 0.5rem 0;
+    color: #666;
+}
+
+.quiz-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+</style>
+{% endblock %} 

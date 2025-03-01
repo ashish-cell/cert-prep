@@ -47,23 +47,66 @@ def dashboard():
         flash('Your account is pending approval.')
         return redirect(url_for('main.index'))
     
-    if current_user.role == 'admin':
-        return redirect(url_for('admin.index'))
+    # Get all quiz attempts for the current user
+    attempts = QuizAttempt.query.filter_by(user_id=current_user.id).all()
     
-    # For students, show quiz list
-    available_quizzes = Quiz.query.filter_by(is_active=True).all()
-    completed_attempts = QuizAttempt.query.filter(
-        QuizAttempt.user_id == current_user.id,
-        QuizAttempt.completed_at.isnot(None)
+    # Calculate summary statistics
+    total_attempts = len(attempts)
+    completed_attempts = [a for a in attempts if a.completed_at]
+    total_completed = len(completed_attempts)
+    
+    # Calculate average score
+    avg_score = 0
+    if total_completed > 0:
+        avg_score = sum(a.score for a in completed_attempts) / total_completed
+    
+    # Get unique quizzes attempted
+    unique_quizzes = set(a.quiz_id for a in attempts)
+    total_unique_quizzes = len(unique_quizzes)
+    
+    # Get recent attempts (last 5)
+    recent_attempts = QuizAttempt.query.filter_by(user_id=current_user.id)\
+        .order_by(QuizAttempt.started_at.desc())\
+        .limit(5).all()
+    
+    # Get best performances
+    best_performances = []
+    for quiz_id in unique_quizzes:
+        quiz = Quiz.query.get(quiz_id)
+        if not quiz:
+            continue
+            
+        # Find best attempt for this quiz
+        best_attempt = QuizAttempt.query.filter_by(
+            user_id=current_user.id,
+            quiz_id=quiz_id,
+        ).filter(QuizAttempt.completed_at != None).order_by(QuizAttempt.score.desc()).first()
+        
+        if best_attempt:
+            best_performances.append({
+                'quiz': quiz,
+                'score': best_attempt.score,
+                'date': best_attempt.completed_at
+            })
+    
+    # Sort by score (highest first)
+    best_performances.sort(key=lambda x: x['score'], reverse=True)
+    
+    # Get available quizzes that the user hasn't attempted yet
+    attempted_quiz_ids = list(unique_quizzes)
+    available_quizzes = Quiz.query.filter(
+        Quiz.is_active == True,
+        ~Quiz.id.in_(attempted_quiz_ids) if attempted_quiz_ids else True
     ).all()
     
-    completed_quiz_titles = {attempt.quiz.title for attempt in completed_attempts}
-    new_quizzes = [quiz for quiz in available_quizzes if quiz.title not in completed_quiz_titles]
-    completed_quizzes = [quiz for quiz in available_quizzes if quiz.title in completed_quiz_titles]
-    
-    return render_template('dashboard/quizzes.html',
-                         new_quizzes=new_quizzes,
-                         completed_quizzes=completed_quizzes)
+    return render_template('user/dashboard.html', 
+                          total_attempts=total_attempts,
+                          total_completed=total_completed,
+                          avg_score=avg_score,
+                          total_unique_quizzes=total_unique_quizzes,
+                          recent_attempts=recent_attempts,
+                          best_performances=best_performances,
+                          available_quizzes=available_quizzes)
 
 @main.route('/quiz/<quiz_title>/start')
 @login_required
@@ -170,20 +213,12 @@ def admin_dashboard():
 @main.route('/quiz/<quiz_title>/submit', methods=['POST'])
 @login_required
 def submit_quiz(quiz_title):
-    print("\n=== Quiz Submission Debug ===")
-    print(f"1. Quiz Title: {quiz_title}")
-    print(f"2. Request Method: {request.method}")
-    print(f"3. Form Data: {request.form}")
-    
     try:
         # Find the quiz
         quiz = Quiz.query.filter_by(title=quiz_title).first()
         if not quiz:
-            print(f"ERROR: Quiz not found with title: {quiz_title}")
             return "Quiz not found", 404
             
-        print(f"4. Found quiz: {quiz.title} (ID: {quiz.id})")
-        
         # Find the attempt
         attempt = QuizAttempt.query.filter_by(
             user_id=current_user.id,
@@ -192,31 +227,28 @@ def submit_quiz(quiz_title):
         ).first()
         
         if not attempt:
-            print(f"ERROR: No active attempt found for user {current_user.id} on quiz {quiz.id}")
             return "No active attempt found", 404
             
-        print(f"5. Found attempt ID: {attempt.id}")
-        
         # Process answers
         answers = {}
         for key, value in request.form.lists():
             if key.startswith('question_'):
-                question_id = key.split('_')[1]  # Keep as string
-                answers[question_id] = [int(v) for v in value if v.isdigit()]
+                # Extract question_id and remove any [] suffix
+                question_id = key.split('_')[1].split('[')[0]  # Remove any [] suffix
+                # Convert values to integers and sort them for consistent comparison
+                answers[question_id] = sorted([int(v) for v in value if v.isdigit()])
                 
-        print(f"DEBUG - Processed answers (Post-Submission): {answers}")
-
-        print(f"6. Processed answers: {answers}")
-        
         # Calculate correct answers
         correct_questions = []
         for question in quiz.questions:
             question_id = str(question.id)  # Convert to string for comparison
+            
             if question_id in answers:
-                if set(answers[question_id]) == set(question.correct_answers):
+                user_answers = sorted(answers[question_id])
+                correct = sorted([int(ca) for ca in question.correct_answers])
+                
+                if user_answers == correct:
                     correct_questions.append(question.id)
-        
-        print(f"7. Correct questions: {correct_questions}")
         
         # Update attempt
         attempt.answers = answers
@@ -225,13 +257,183 @@ def submit_quiz(quiz_title):
         attempt.score = (len(correct_questions) / len(quiz.questions)) * 100 if quiz.questions else 0
         
         db.session.commit()
-        print("8. Successfully saved attempt")
         
         return redirect(url_for('main.view_result', quiz_title=quiz.title))
         
     except Exception as e:
-        print(f"ERROR: {str(e)}")
-        import traceback
-        print(traceback.format_exc())
         db.session.rollback()
         return f"Error: {str(e)}", 500
+
+@main.route('/api/quiz/create', methods=['POST'])
+@login_required
+def create_quiz():
+    if not current_user.role == 'admin':
+        return jsonify({'error': 'Unauthorized'}), 403
+
+    data = request.get_json()
+    
+    try:
+        # Validate duration if provided
+        duration = data.get('duration_minutes')
+        if duration is not None:
+            try:
+                duration = int(duration)
+                if duration <= 0:
+                    return jsonify({'error': 'Duration must be a positive number'}), 400
+            except ValueError:
+                return jsonify({'error': 'Duration must be a valid number'}), 400
+        
+        quiz = Quiz(
+            title=data['title'],
+            description=data.get('description', ''),
+            duration_minutes=duration if duration is not None else 90,  # Use provided duration or default
+            created_by=current_user.id,
+            is_active=data.get('is_active', True)
+        )
+        
+        db.session.add(quiz)
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Quiz created successfully', 
+            'quiz': quiz.to_dict()
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 400
+
+@main.route('/quiz/upload', methods=['POST'])
+@login_required
+def upload_quiz():
+    if not current_user.role == 'admin':
+        flash('Unauthorized access')
+        return redirect(url_for('main.index'))
+
+    try:
+        # Get the quiz time from form
+        quiz_time = int(request.form.get('quiz_time', 60))
+        if not 1 <= quiz_time <= 180:
+            flash('Quiz time must be between 1 and 180 minutes')
+            return redirect(url_for('admin.quizzes'))
+
+        # Get the uploaded file
+        if 'quiz_file' not in request.files:
+            flash('No file uploaded')
+            return redirect(url_for('admin.quizzes'))
+        
+        file = request.files['quiz_file']
+        if file.filename == '':
+            flash('No file selected')
+            return redirect(url_for('admin.quizzes'))
+
+        # Read and parse JSON
+        quiz_data = json.load(file)
+        if 'questions' not in quiz_data:
+            flash('Invalid quiz format: missing questions array')
+            return redirect(url_for('admin.quizzes'))
+
+        # Create the quiz with the specified duration
+        quiz = Quiz(
+            title=f"Quiz_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}",
+            created_by=current_user.id,
+            duration_minutes=quiz_time
+        )
+        db.session.add(quiz)
+
+        # Add questions
+        for i, q in enumerate(quiz_data['questions']):
+            question = Question(
+                quiz_id=quiz.id,
+                text=q['question_text'],
+                options=q['options'],
+                correct_answers=q['correct_answers'],
+                explanations=q['explanations'],
+                domain=q['domain'],
+                order=i,
+                points=1
+            )
+            db.session.add(question)
+
+        db.session.commit()
+        flash('Quiz uploaded successfully')
+        return redirect(url_for('admin.quizzes'))
+
+    except json.JSONDecodeError:
+        flash('Invalid JSON file')
+        return redirect(url_for('admin.quizzes'))
+    except KeyError as e:
+        flash(f'Missing required field: {str(e)}')
+        return redirect(url_for('admin.quizzes'))
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error uploading quiz: {str(e)}')
+        return redirect(url_for('admin.quizzes'))
+
+@main.route('/my-quizzes')
+@login_required
+def my_quizzes():
+    if not current_user.approved:
+        flash('Your account is pending approval.')
+        return redirect(url_for('main.index'))
+    
+    # Get all quiz attempts for the current user
+    attempts = QuizAttempt.query.filter_by(user_id=current_user.id).all()
+    
+    # Group attempts by quiz
+    quiz_attempts = {}
+    for attempt in attempts:
+        quiz = Quiz.query.get(attempt.quiz_id)
+        if quiz:
+            if quiz.id not in quiz_attempts:
+                quiz_attempts[quiz.id] = {
+                    'quiz': quiz,
+                    'attempts': [],
+                    'best_score': 0,
+                    'completed': False
+                }
+            
+            quiz_attempts[quiz.id]['attempts'].append(attempt)
+            
+            # Update best score if this attempt is completed
+            if attempt.completed_at and attempt.score is not None:
+                quiz_attempts[quiz.id]['completed'] = True
+                if attempt.score > quiz_attempts[quiz.id]['best_score']:
+                    quiz_attempts[quiz.id]['best_score'] = attempt.score
+    
+    # Get available quizzes that the user hasn't attempted yet
+    attempted_quiz_ids = list(quiz_attempts.keys())
+    available_quizzes = Quiz.query.filter(
+        Quiz.is_active == True,
+        ~Quiz.id.in_(attempted_quiz_ids) if attempted_quiz_ids else True
+    ).all()
+    
+    return render_template('user/my_quizzes.html', 
+                          quiz_attempts=quiz_attempts.values(),
+                          available_quizzes=available_quizzes)
+
+@main.route('/quiz/<quiz_id>/delete', methods=['POST'])
+@login_required
+def delete_quiz(quiz_id):
+    if not current_user.role == 'admin':
+        return jsonify({'success': False, 'message': 'Unauthorized access'}), 403
+        
+    try:
+        # Find the quiz
+        quiz = Quiz.query.get_or_404(quiz_id)
+        
+        # Delete all attempts for this quiz
+        QuizAttempt.query.filter_by(quiz_id=quiz.id).delete()
+        
+        # Delete all questions for this quiz
+        Question.query.filter_by(quiz_id=quiz.id).delete()
+        
+        # Delete the quiz
+        db.session.delete(quiz)
+        db.session.commit()
+        
+        return jsonify({'success': True, 'message': 'Quiz deleted successfully'})
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': f'Error deleting quiz: {str(e)}'}), 500
